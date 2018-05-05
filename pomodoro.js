@@ -14,6 +14,8 @@ function Pomodoro(minutes, seconds=0) {
   };
 }
 
-let timer = new Pomodoro(parseInt(process.argv[2]), parseInt(process.argv[3]));
+var args = process.argv.map(arg => parseInt(arg)).splice(2);
+
+let timer = new Pomodoro(...args);
 
 timer.timeout(timer.seconds);
