@@ -1,4 +1,5 @@
 function Pomodoro(minutes, seconds=0) {
+  
   this.seconds = (minutes*60) + seconds;
   
   this.timeout = function(seconds) {
@@ -6,7 +7,7 @@ function Pomodoro(minutes, seconds=0) {
       if (seconds === 0) {
         console.log('done');
       } else {
-        console.log(parseInt(seconds/60) + ":" + ((seconds%60) === 0 ? "00" : seconds%60));
+        console.log(parseInt(seconds/60) + ":" + ((seconds%60).toString().length === 1 ? "0" + (seconds%60).toString() : seconds%60));
         this.timeout(seconds - 1);
       }
     }, 1000);
