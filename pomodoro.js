@@ -1,9 +1,13 @@
-  //node
-//var args = process.argv.map(arg => parseInt(arg)).splice(2);
-//let timer = new Pomodoro(...args);
-
 const timerElem = document.getElementById('timer');
-let timer = new Pomodoro(5, 10);
+const minutesInput = document.getElementById('minutesInput');
+const secondsInput = document.getElementById('secondsInput');
+let timer = new Pomodoro(0);
+
+function setTimer() {
+  timer.stop = true;
+  timer = new Pomodoro(minutesInput.valueAsNumber, secondsInput.valueAsNumber);
+  timer.timeout(timer.seconds);
+}
 
 function Pomodoro(minutes, seconds=0) {
   
@@ -11,15 +15,19 @@ function Pomodoro(minutes, seconds=0) {
   
   this.timeout = (seconds) => {
     setTimeout(() => {
-      if (seconds === 0) {
-        console.log('done');
+      if(this.stop === true || seconds === 0) {
+        return;
       } else {
         console.log(parseInt(seconds/60) + ":" + ((seconds%60).toString().length === 1 ? "0" + (seconds%60).toString() : seconds%60));
         timerElem.innerHTML = parseInt(seconds/60) + ":" + ((seconds%60).toString().length === 1 ? "0" + (seconds%60).toString() : seconds%60);
-        this.timeout(seconds - 1);
+        this.seconds--;
+        this.timeout(this.seconds);
       }
     }, 1000);
   };
+  
+  this.stop = false;
+  
 }
 
 timer.timeout(timer.seconds);
