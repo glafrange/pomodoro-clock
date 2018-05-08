@@ -3,31 +3,42 @@ const minutesInput = document.getElementById('minutesInput');
 const secondsInput = document.getElementById('secondsInput');
 let timer = new Pomodoro(0);
 
-function setTimer() {
-  timer.stop = true;
-  timer = new Pomodoro(minutesInput.valueAsNumber, secondsInput.valueAsNumber);
-  timer.timeout(timer.seconds);
-}
-
-function Pomodoro(minutes, seconds=0) {
-  
+function Pomodoro(minutes, seconds) {
   this.seconds = (minutes*60) + seconds;
+  this.stop = false;
   
-  this.timeout = (seconds) => {
+  this.start = (seconds) => {
+    this.stopBool = false;
     setTimeout(() => {
-      if(this.stop === true || seconds === 0) {
+      if(this.stopBool === true || seconds < 0) {
         return;
       } else {
-        console.log(parseInt(seconds/60) + ":" + ((seconds%60).toString().length === 1 ? "0" + (seconds%60).toString() : seconds%60));
-        timerElem.innerHTML = parseInt(seconds/60) + ":" + ((seconds%60).toString().length === 1 ? "0" + (seconds%60).toString() : seconds%60);
+        timerElem.innerHTML = parseInt(seconds/60) + ":" + ((seconds%60).toString().length === 1 ? "0" + (seconds%60).toString() : seconds%60); // Making sure the seconds always have 2 digits
         this.seconds--;
-        this.timeout(this.seconds);
+        this.start(this.seconds);
       }
     }, 1000);
   };
   
-  this.stop = false;
+  this.stop = () => {
+    this.stopBool = true;
+  };
   
+  this.reset = () => {
+    this.stop();
+    console.log(this);
+    this.seconds = 0;
+    this.start(this.seconds);
+  };
+  
+  this.setTimer = () => {
+    this.reset();
+    console.log(timer);
+    timer = new Pomodoro((isNaN(minutesInput.valueAsNumber) ? 0 : minutesInput.valueAsNumber),
+                         (isNaN(secondsInput.valueAsNumber) ? 0 : secondsInput.valueAsNumber));
+    minutesInput.value = '';
+    secondsInput.value = '';
+    timer.start(timer.seconds);
+  };
 }
 
-timer.timeout(timer.seconds);
